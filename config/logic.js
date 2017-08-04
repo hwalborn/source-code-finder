@@ -34,10 +34,7 @@ export default {
 
   addClass: () => {
     let spans = document.querySelectorAll('span')
-    // Array.prototype.forEach.bind(spans)
     Array.prototype.forEach.call(spans, function(span) {
-      // spans.forEach((span) => {
-      // debugger
       let spanClass = span.innerText
       if(!LOGIC.isNote(spanClass)) {
         if(LOGIC.hasWhiteSpace(spanClass)) {
@@ -45,23 +42,12 @@ export default {
         } else {
           spanClass = LOGIC.createClass(spanClass, '>')
         }
-        LOGIC.highLightAllElements.bind(span)
-        span.onclick = LOGIC.highLightAllElements
         span.className = spanClass
       }
     })
   },
 
-  highLightAllElements: function() {
-    LOGIC.unHighlight()
-    let highlighted = document.getElementsByClassName(this.className)
-    Array.prototype.forEach.call(highlighted, (span) => {
-      span.style = 'background-color:yellow;'
-    })
-  },
-
   unHighlight: () => {
-    // debugger
     let spans = document.querySelectorAll('span')
     Array.prototype.forEach.call(spans, (span) => {
       span.style = "background-color:white;"

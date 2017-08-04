@@ -14,12 +14,15 @@ module.exports = {
     loaders: [
       {
         test: /\.css/,
-        include: path.resolve(__dirname, "./app"),
-        loader: "style-loader!css-loader"
+        include: path.resolve(__dirname, "./src"),
+        use: [
+          { loader: 'style-loader' },
+          { loader: 'css-loader' }
+        ]
       },
       {
         test: /\.(png|jpg|gif|svg|eot|ttf|woff|woff2)/,
-        include: path.resolve(__dirname, "./app"),
+        include: path.resolve(__dirname, "./src"),
         loader: "url-loader"
       },
       {
