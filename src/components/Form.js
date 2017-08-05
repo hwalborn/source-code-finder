@@ -12,6 +12,7 @@ export const Form = ({ handleChange, handleSubmit, hasJSX, handleFormat, handleC
     <form onSubmit={handleSubmit}>
       <FormGroup>
         <FormControl
+          placeholder="http://www.example.com"
           style={inputStyle}
           onChange={handleChange}
           id="query"
