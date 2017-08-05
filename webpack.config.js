@@ -13,19 +13,6 @@ module.exports = {
   module: {
     loaders: [
       {
-        test: /\.css/,
-        include: path.resolve(__dirname, "./src"),
-        use: [
-          { loader: 'style-loader' },
-          { loader: 'css-loader' }
-        ]
-      },
-      {
-        test: /\.(png|jpg|gif|svg|eot|ttf|woff|woff2)/,
-        include: path.resolve(__dirname, "./src"),
-        loader: "url-loader"
-      },
-      {
         test: /\.js/,
         exclude: /node_modules/,
         loader: "babel-loader",

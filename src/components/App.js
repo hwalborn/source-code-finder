@@ -5,17 +5,16 @@ import LOGIC from '../../config/logic.js'
 window.LOGIC = LOGIC
 import { Span } from './Span'
 import { Form } from './Form'
-
-import style from '../style/style.css'
+import { NonSpan } from './NonSpan'
 
 class App extends React.Component {
   constructor() {
     super()
     this.state = {
       url: "",
-      html: "",
       formatted: false,
-      highlightColor: 'yellow'
+      highlightColor: 'yellow',
+      jsx: []
     }
     this.handleSubmit = this.handleSubmit.bind(this)
     this.handleChange = this.handleChange.bind(this)
@@ -26,18 +25,18 @@ class App extends React.Component {
 
   handleSubmit(e) {
     e.preventDefault()
-    fetch(`http://localhost:3000/?url=${this.state.url}`)
+    let newUrl = this.sanitizeUrl()
+    fetch(`http://localhost:3000/?url=${newUrl}`)
     .then((resp) => {
       resp.json().then((data) => {
+        debugger
         let queryDiv = document.getElementById('query')
         if(data.query) {
+          let jsx = this.makeJSX(data.query)
           this.setState({
-            html: LOGIC.escapeHtml(data.query)
+            jsx: jsx
           })
-          // let newShit = this.state.html.replace(/<.*?>/g, (match) => {
-          //   return <Span handleClick={this.handleClick} content={this.content} />
-          // })
-          LOGIC.addClass()
+          debugger
         } else {
           queryDiv.innerHTML = `Server came back with ${data.error}`
         }
@@ -48,6 +47,32 @@ class App extends React.Component {
     })
   }
 
+  sanitizeUrl() {
+    if(this.state.url.substr(0, 4) !== 'http'){
+      return `http://${this.state.url}`
+    } else {
+      return this.state.url
+    }
+  }
+
+  makeJSX(jsx) {
+    let jsxArr = []
+    let nonSpan = ""
+    jsx.replace(/<.*?>|./g, (match, p1) => {
+      // debugger
+      if(match[0] === '<' && (match[1] !== '!' || match[2] !== '-')) {
+        if(nonSpan.length !== 0) {
+          jsxArr.push(<NonSpan key={p1 - 1} string={nonSpan} />)
+          nonSpan = ""
+        }
+        jsxArr.push(<Span key={p1} handleClick={this.handleClick} content={match} />)
+      } else {
+        nonSpan = nonSpan + match
+      }
+    })
+    return jsxArr
+  }
+
   handleChange(e) {
     this.setState({
       url: e.target.value
@@ -55,11 +80,11 @@ class App extends React.Component {
   }
 
   handleClick(e) {
-    LOGIC.unHighlight()
+    LOGIC.unHighlight(this.state.formatted)
     if(e.target.tagName === "SPAN") {
       let highlighted = document.getElementsByClassName(e.target.className)
-      Array.prototype.forEach.call(highlighted, (span) => {
-        span.style = `background-color:${this.state.highlightColor}`
+      Array.prototype.map.call(highlighted, (span) => {
+        this.state.formatted ? span.style=`background-color:${this.state.highlightColor};display:block;` : span.style = `background-color:${this.state.highlightColor};`
       })
     }
   }
@@ -72,13 +97,15 @@ class App extends React.Component {
 
   handleFormat(e) {
     e.preventDefault()
-    this.setState({
-      spans: document.querySelectorAll('span')
-    })
-    let leftMargin = 0
     let spans = document.querySelectorAll('span')
-    Array.prototype.forEach.call(spans, (span) => {
-
+    // Workaround to put on event cycle
+    window.setTimeout(() => {
+      Array.prototype.forEach.call(spans, (span) => {
+        span.style = "display:block;"
+      })
+      this.setState({
+        formatted: true
+      })
     })
   }
 
@@ -87,10 +114,11 @@ class App extends React.Component {
       <div onClick={this.handleClick} className="test" id="app">
         <Form handleChange={this.handleChange}
               handleSubmit={this.handleSubmit}
-              hasHTML={this.state.html.length > 0}
+              hasJSX={this.state.jsx.length > 0}
               handleFormat={this.handleFormat}
               handleColorChange={this.handleColorChange}/>
-        {this.state.html.length > 0 ? <p id="query-text" dangerouslySetInnerHTML={{__html: this.state.html}}></p> : null}
+              {this.state.jsx}
+
       </div>
     )
   }
