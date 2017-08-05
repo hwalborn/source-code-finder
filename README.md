@@ -1,10 +1,10 @@
 # Source Code Finder and Highlighter
 
-This is a web application built with pure JavaScript/HTML to display the
-source code for the url that is typed into the input box.
+This is a web application built with React and Express that builds on the already existing application I built out using pure html and JavaScript. A user can search for a url and get the source code displayed in the browser
 
-Once the code is displayed, the user may click on any html element to
-highlight any elements that correspond
+Once the code is displayed, the user may click on any html element to highlight any elements that correspond. The user may also select the color of the highlight from the dropdown menu
+
+There is also an option to format the text.
 
 The front end makes calls to an external API built with Express
 
@@ -12,9 +12,17 @@ The front end makes calls to an external API built with Express
 
 + CORS management
 + Express server
-+ Pure HTML and JavaScript
++ React
++ Format code
++ Select highlight color
++ Testing using `npm test` with chai and enzyme
++ Basic url sanitization
 
-## Instal and run:
+## Install and run:
+
+### WARNING
+If you do not have "concurrently", "webpack", and "webpack-dev-server" installed globally, this will not work. You will need to run `npm install -g {package}` for each one. Once that is done, follow the next steps:
+
 + Clone the repo
 + `cd` into the correct directory
 + run `npm install`
