@@ -29,14 +29,12 @@ class App extends React.Component {
     fetch(`http://localhost:3000/?url=${newUrl}`)
     .then((resp) => {
       resp.json().then((data) => {
-        debugger
         let queryDiv = document.getElementById('query')
         if(data.query) {
           let jsx = this.makeJSX(data.query)
           this.setState({
             jsx: jsx
           })
-          debugger
         } else {
           queryDiv.innerHTML = `Server came back with ${data.error}`
         }
@@ -59,7 +57,6 @@ class App extends React.Component {
     let jsxArr = []
     let nonSpan = ""
     jsx.replace(/<.*?>|./g, (match, p1) => {
-      // debugger
       if(match[0] === '<' && (match[1] !== '!' || match[2] !== '-')) {
         if(nonSpan.length !== 0) {
           jsxArr.push(<NonSpan key={p1 - 1} string={nonSpan} />)
