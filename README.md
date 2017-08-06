@@ -26,4 +26,5 @@ If you do not have "concurrently", "webpack", and "webpack-dev-server" installed
 + Clone the repo
 + `cd` into the correct directory
 + run `npm install`
-+ run `npm start` and the browser will open
++ run `npm start`
++ enter "http://localhost:8000" in the browser
